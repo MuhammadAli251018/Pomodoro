@@ -4,6 +4,9 @@ build/
 gradlew.bat
 gradlew
 
+# Application Design file
+Design
+
 # Local configuration file (sdk path, etc)
 local.properties
 
