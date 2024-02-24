@@ -1,4 +1,4 @@
-package online.muhammadali.pomodoro.ui.theme
+package online.muhammadali.pomodoro.common.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
