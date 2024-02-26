@@ -2,6 +2,7 @@ package online.muhammadali.pomodoro.features.pomodoro.presentation.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -14,9 +15,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -24,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 
 
-
+/*
 @Composable
 fun PomodoroCounter(
     modifier: Modifier,
@@ -48,17 +51,18 @@ fun PomodoroCounter(
             fontWeight = FontWeight.Light
         )
     }
-}
+}*/
 
 // stateless
 @Composable
 fun PomodoroCounter(
     modifier: Modifier,
-    size: DpSize,
+    size: Dp,
     time: String,
     completion: Float,
     fontSize: TextUnit,
-    fontWeight: FontWeight
+    fontWeight: FontWeight,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -72,24 +76,34 @@ fun PomodoroCounter(
             fontWeight = fontWeight
         )
 
-        val arcColor = MaterialTheme.colorScheme.primary
+        val circleColor = MaterialTheme.colorScheme.primary
+        val arcColor = Color.White.copy(alpha = 0.25f)
+
+
 
         Canvas(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(onClick = onClick)
         ) {
-            val radius = this.size.width * 0.9f
+            val radius = this.size.width * 0.8f
+
+
+            drawCircle(
+                color = circleColor,
+                radius = radius / 1.9f,
+                center = center,
+                style = Stroke(width = 8f)
+            )
 
             drawArc(
                 color = arcColor,
                 startAngle = 0f,
                 sweepAngle = completion * 360f,
-                useCenter = false,
-                topLeft = Offset(x = (this.size.width - radius) / 2, y = (this.size.width - radius) / 2),
+                useCenter = true,
+                topLeft = Offset(x = (this.size.width - radius) / 2, y = (this.size.height - radius) / 2),
                 size = Size(radius, radius),
-                style = Stroke(
-                    width = 6f,
-                    cap = StrokeCap.Square
-                )
+                style = Fill
             )
         }
     }
@@ -106,12 +120,12 @@ fun PomodoroCounterPreview() {
         ){
             PomodoroCounter(
                 modifier = Modifier,
-                size = DpSize(150.dp, 150.dp),
-                time = "25:00",
+                size = 300.dp,
+                time = "25:00:00",
                 completion = .75f,
-                fontSize = 35.sp,
+                fontSize = 30.sp,
                 fontWeight = FontWeight.Light
-            )
+            ) {}
         }
     }
 }
