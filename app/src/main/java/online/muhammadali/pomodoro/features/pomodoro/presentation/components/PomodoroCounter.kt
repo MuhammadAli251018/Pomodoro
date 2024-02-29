@@ -86,23 +86,25 @@ fun PomodoroCounter(
                 .fillMaxSize()
                 .clickable(onClick = onClick)
         ) {
-            val radius = this.size.width * 0.8f
+            val radius = center.x * 0.85f
 
 
             drawCircle(
                 color = circleColor,
-                radius = radius / 1.9f,
+                radius = radius,
                 center = center,
                 style = Stroke(width = 8f)
             )
+
+            val innerRadius = radius * 1.85f
 
             drawArc(
                 color = arcColor,
                 startAngle = 0f,
                 sweepAngle = completion * 360f,
                 useCenter = true,
-                topLeft = Offset(x = (this.size.width - radius) / 2, y = (this.size.height - radius) / 2),
-                size = Size(radius, radius),
+                topLeft = Offset(x = (this.size.width - innerRadius) / 2, y = (this.size.height - innerRadius) / 2),
+                size = Size(innerRadius, innerRadius),
                 style = Fill
             )
         }

@@ -85,7 +85,7 @@ fun SessionsIndicatorPreview() {
             contentAlignment = Alignment.Center
         ) {
             SessionsIndicator(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier,
                 5,
                 0)
         }
