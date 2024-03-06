@@ -3,7 +3,7 @@ package online.muhammadali.pomodoro.features.pomodoro.domain
 import android.util.Log
 import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.perform
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 private const val TAG = "PomodoroCounterStateTAG"
 sealed class PomodoroCounterState : CounterState {
@@ -16,7 +16,7 @@ sealed class PomodoroCounterState : CounterState {
 
             return when(previousState) {
                 is BreakState -> FocusState(
-                    25.seconds,
+                    25.minutes,
                     Companion::defaultTransitionRule,
                     maxSessions = previousState.maxSessions,
                     changeReason = changeReason,
@@ -24,7 +24,7 @@ sealed class PomodoroCounterState : CounterState {
                 )
                 is FocusState -> if (previousState.completedSessions + 1 < previousState.maxSessions - 1) {
                     BreakState(
-                        5.seconds,
+                        5.minutes,
                         Companion::defaultTransitionRule,
                         maxSessions = previousState.maxSessions,
                         changeReason = changeReason,
@@ -34,7 +34,7 @@ sealed class PomodoroCounterState : CounterState {
                 else {
 
                     LongBreak(
-                        15.seconds,
+                        15.minutes,
                         transitionRule = Companion::defaultTransitionRule,
                         maxSessions = previousState.maxSessions,
                         changeReason = changeReason,
@@ -44,7 +44,7 @@ sealed class PomodoroCounterState : CounterState {
                 is LongBreak -> {
                     Log.d(TAG, "long break completed: ${previousState.completedSessions}, default parameter: ${previousState.maxSessions - 1}")
                     FocusState(
-                        25.seconds,
+                        25.minutes,
                         Companion::defaultTransitionRule,
                         maxSessions = previousState.maxSessions,
                         changeReason = changeReason
@@ -53,7 +53,7 @@ sealed class PomodoroCounterState : CounterState {
             }
         }
         fun getDefaultState(): PomodoroCounterState = FocusState(
-            session = 25.seconds,
+            session = 25.minutes,
             transitionRule = Companion::defaultTransitionRule,
             maxSessions = 2,
             changeReason = StateChangeReason.PauseOrResume,
