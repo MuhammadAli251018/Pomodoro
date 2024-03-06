@@ -1,4 +1,4 @@
-package online.muhammadali.pomodoro.features.pomodoro.domain.entities
+package online.muhammadali.pomodoro.features.pomodoro.domain
 
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.time.Duration

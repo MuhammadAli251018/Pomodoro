@@ -1,4 +1,4 @@
-package online.muhammadali.pomodoro.features.pomodoro.domain.entities
+package online.muhammadali.pomodoro.features.pomodoro.domain
 
 import kotlin.time.Duration
 

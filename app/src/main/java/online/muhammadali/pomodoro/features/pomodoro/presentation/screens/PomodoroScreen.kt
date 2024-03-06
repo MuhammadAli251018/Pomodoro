@@ -1,5 +1,6 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.PomodoroCounter
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.SessionsIndicator
 
+private const val TAG  = "PomodoroScreenTAG"
 
 sealed class PomodoroScreenMode {
     @get:Composable
@@ -63,9 +65,10 @@ data class IndicatorState(
     val lastCompletedSession: Int
 )
 
-data class PomodoroCounterState (
+data class UiPomodoroCounterState (
     val currentTime: String,
-    val completion: Float
+    val completion: Float,
+    val state: State
 ) {
     sealed class State {
 
@@ -86,7 +89,7 @@ data class PomodoroCounterState (
 
 interface PomodoroScreenSAManager {
     val screenMode: StateFlow<PomodoroScreenMode>
-    val counterState: StateFlow<PomodoroCounterState>
+    val counterState: StateFlow<UiPomodoroCounterState>
     val indicatorState: StateFlow<IndicatorState>
     val onCounterClick: () -> Unit
 }
@@ -109,10 +112,11 @@ fun PomodoroScreen(
 @Composable
 fun PomodoroScreen(
     screenMode: PomodoroScreenMode,
-    counterState: PomodoroCounterState,
+    counterState: UiPomodoroCounterState,
     indicatorState: IndicatorState,
     onCounterClick: () -> Unit
 ) {
+    Log.d(TAG, "counterState: ${counterState.currentTime}")
     PomodoroScreen(
         backgroundColor = screenMode.backgroundColor,
         time = counterState.currentTime,
@@ -146,7 +150,7 @@ private fun PomodoroScreen(
 
         PomodoroCounter(
             modifier = Modifier,
-            size = 350.dp,
+            size = 300.dp,
             time = time,
             completion = counterCompletion,
             fontSize = 60.sp,
@@ -159,7 +163,9 @@ private fun PomodoroScreen(
         SessionsIndicator(
             modifier = Modifier,
             sessionsCount = sessionsCount,
-            lastCompleted = lastCompletedSession
+            lastCompleted = lastCompletedSession,
+            diameterLength = 15.dp,
+            spaceLength = 15.dp
         )
 
         VerticalSpace(height = 100.dp)
