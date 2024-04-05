@@ -71,10 +71,10 @@ sealed class PomodoroCounterState : CounterState {
     abstract val completedSessions: Int
 
     fun nextSession(): PomodoroCounterState = this.onDurationChange {
-        val result = transitionRule()
-        Log.d(TAG, "completed: $completedSessions, max: $maxSessions")
-        Log.d(TAG, "previous Session input: $this, finishedAll: ${ completedSessions >= (maxSessions - 1)}, reason: ${StateChangeReason.DurationChange} | Result: $result")
-        result
+        transitionRule()
+//        Log.d(TAG, "completed: $completedSessions, max: $maxSessions")
+//        Log.d(TAG, "previous Session input: $this, finishedAll: ${ completedSessions >= (maxSessions - 1)}, reason: ${StateChangeReason.DurationChange} | Result: $result")
+//        result
     }
 
     abstract fun pauseOrResumeCounter(): PomodoroCounterState
