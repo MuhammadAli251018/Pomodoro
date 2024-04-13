@@ -1,6 +1,6 @@
 package online.muhammadali.pomodoro.features.pomodoro.domain
 
-data class PomodoroSettings(
+data class PomodoroPreferences(
     val sessionsForLongBreak: Int,
     val groupsOfSessions: Int,
     val focusPeriod: Int,
