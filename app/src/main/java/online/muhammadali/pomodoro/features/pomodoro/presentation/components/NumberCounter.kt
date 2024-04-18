@@ -1,11 +1,13 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,9 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import online.muhammadali.pomodoro.common.presentation.components.VerticalSpace
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 
 /*** Stateful*/
@@ -35,7 +41,9 @@ fun NumberCounter(
     max: Int,
     currentInit: Int,
     step: Int,
+    title: String,
     backgroundColor: Color,
+    titleFontSize: TextUnit,
     numberFontSize: TextUnit,
     onChange: (Int) -> Unit
 ) {
@@ -47,8 +55,10 @@ fun NumberCounter(
         current = currentCount,
         backgroundColor = backgroundColor,
         showControllers = showControllers,
+        title = title,
         onNumberClick = {showControllers = !showControllers},
         bigTextSize = numberFontSize,
+        titleFontSize = titleFontSize,
         smallTextSize = numberFontSize / 2,
         onIncrement = {
             if ((currentCount + step) <= max) currentCount += step
@@ -68,36 +78,56 @@ fun NumberCounter(
     current: Int,
     backgroundColor: Color,
     showControllers: Boolean,
-    onNumberClick: () -> Unit,
+    title: String,
     bigTextSize: TextUnit,
     smallTextSize: TextUnit,
+    titleFontSize: TextUnit,
+    onNumberClick: () -> Unit,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit
 ) {
-    Row(
+    Column(
         modifier = modifier
             .background(backgroundColor)
-    ) {
+    ){
+        VerticalSpace(height = 10.dp)
 
-        if (showControllers){
-            CounterController(
-                modifier = Modifier.weight(0.5f),
-                backgroundColor = backgroundColor,
-                onIncrement = onIncrement,
-                onDecrement = onDecrement,
-                fontSize = smallTextSize
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 10.dp),
+            text = title,
+            fontSize = titleFontSize,
+            color = Color.White
+        )
+
+        VerticalSpace(height = 10.dp)
+
+        Row(
+            modifier
+                .background(backgroundColor.makeDarker(.15f))
+        ) {
+
+            if (showControllers) {
+                CounterController(
+                    modifier = Modifier.weight(0.5f),
+                    backgroundColor = Color.Transparent,
+                    onIncrement = onIncrement,
+                    onDecrement = onDecrement,
+                    fontSize = smallTextSize
+                )
+            }
+
+            CountedNumber(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .align(Alignment.CenterVertically),
+                current = current,
+                backgroundColor = Color.Transparent,
+                onClick = onNumberClick,
+                fontSize = bigTextSize
             )
         }
-
-        CountedNumber(
-            modifier = Modifier
-                .weight(0.5f)
-                .align(Alignment.CenterVertically),
-            current = current,
-            backgroundColor = backgroundColor,
-            onClick = onNumberClick,
-            fontSize = bigTextSize
-        )
     }
 }
 
@@ -223,6 +253,8 @@ fun NumberCounterPreview() {
             modifier = Modifier.fillMaxWidth(),
             current = 25,
             backgroundColor = MaterialTheme.colorScheme.background,
+            titleFontSize = 20.sp,
+            title = "bla",
             showControllers = true,
             bigTextSize = 60.sp,
             smallTextSize = 40.sp,
@@ -231,4 +263,12 @@ fun NumberCounterPreview() {
 
         }
     }
+}
+
+private fun Color.makeDarker(percentage: Float): Color {
+    val newRed = (Color.Black.red - red) * percentage + red
+    val newGreen = (Color.Black.green - green) * percentage + green
+    val newBlue = (Color.Black.blue - blue) * percentage + blue
+
+    return Color(red = newRed, green = newGreen, blue = newBlue)
 }
