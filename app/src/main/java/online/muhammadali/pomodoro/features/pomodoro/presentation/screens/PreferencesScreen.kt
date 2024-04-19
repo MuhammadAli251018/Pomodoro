@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -27,7 +27,7 @@ fun PreferencesScreen (
     viewModel: PreferencesViewModel
 ) {
     val context = LocalContext.current
-    val preferences = viewModel.getCurrentPreferences()
+    val preferences by viewModel.getCurrentPreferences()
     PreferencesScreen(
         preferences = preferences,
         onFocusPeriodChange = {
@@ -109,7 +109,7 @@ fun PreferencesScreen (
             modifier = Modifier,
             min = 10,
             max = 45,
-            currentInit = preferences.focusPeriod,
+            current = preferences.focusPeriod,
             step = 1,
             title = "Focus Period",
             backgroundColor = MaterialTheme.colorScheme.background,
@@ -125,7 +125,7 @@ fun PreferencesScreen (
             modifier = Modifier,
             min = 1,
             max = 10,
-            currentInit = preferences.breakPeriod,
+            current = preferences.breakPeriod,
             step = 1,
             title = "Break Period",
             backgroundColor = MaterialTheme.colorScheme.background,
@@ -141,7 +141,7 @@ fun PreferencesScreen (
             modifier = Modifier,
             min = 5,
             max = 20,
-            currentInit = preferences.longBreakPeriod,
+            current = preferences.longBreakPeriod,
             step = 1,
             title = "Long Break Period",
             backgroundColor = MaterialTheme.colorScheme.background,
@@ -157,7 +157,7 @@ fun PreferencesScreen (
             modifier = Modifier,
             min = 10,
             max = 45,
-            currentInit = preferences.sessionsForLongBreak,
+            current = preferences.sessionsForLongBreak,
             step = 1,
             title = "Sessions until long break",
             backgroundColor = MaterialTheme.colorScheme.background,
@@ -173,7 +173,7 @@ fun PreferencesScreen (
             modifier = Modifier,
             min = 10,
             max = 45,
-            currentInit = preferences.groupsOfSessions,
+            current = preferences.groupsOfSessions,
             step = 1,
             title = "Sessions Groups",
             backgroundColor = MaterialTheme.colorScheme.background,
