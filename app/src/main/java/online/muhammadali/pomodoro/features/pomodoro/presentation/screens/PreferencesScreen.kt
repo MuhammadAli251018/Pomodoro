@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,7 +22,63 @@ import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.NumberCounter
 
 
-// Stateless
+@Composable
+fun PreferencesScreen (
+    viewModel: PreferencesViewModel
+) {
+    val context = LocalContext.current
+    val preferences = viewModel.getCurrentPreferences()
+    PreferencesScreen(
+        preferences = preferences,
+        onFocusPeriodChange = {
+            viewModel.apply {
+                context.saveNewPreferences(
+                    preferences.copy(
+                        focusPeriod = it
+                    )
+                )
+            }
+        },
+        onBreakPeriodChange = {
+            viewModel.apply {
+                context.saveNewPreferences(
+                    preferences.copy(
+                        breakPeriod = it
+                    )
+                )
+            }
+        },
+        onLongBreakPeriodChange = {
+            viewModel.apply {
+                context.saveNewPreferences(
+                    preferences.copy(
+                        longBreakPeriod = it
+                    )
+                )
+            }
+        },
+        onSessionToLongBreakChange = {
+            viewModel.apply {
+                context.saveNewPreferences(
+                    preferences.copy(
+                        sessionsForLongBreak = it
+                    )
+                )
+            }
+        },
+        onSessionsGroupsChange = {
+            viewModel.apply {
+                context.saveNewPreferences(
+                    preferences.copy(
+                        groupsOfSessions = it
+                    )
+                )
+            }
+        }
+    )
+}
+/***
+ * @param preferences is initial value for the state*/
 @Composable
 fun PreferencesScreen (
     preferences: PomodoroPreferences,
