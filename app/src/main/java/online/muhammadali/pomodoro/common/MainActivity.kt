@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.PomodoroScreen
 import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.PomodoroViewModel
+import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.navigation.PomodoroNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +27,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel = viewModel<PomodoroViewModel>(
-                        factory = PomodoroViewModel.factoryProvider(this)
-                    )
-                    PomodoroScreen(stateActionManager = viewModel)
+                    /*val viewModel = viewModel<PomodoroViewModel>()
+                    PomodoroScreen(stateActionManager = viewModel)*/
+
+                    PomodoroNavHost(navHostController = rememberNavController())
                 }
             }
         }
