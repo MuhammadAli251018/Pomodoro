@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import online.muhammadali.pomodoro.features.pomodoro.data.preferences.PreferencesDataStore
+import online.muhammadali.pomodoro.features.pomodoro.di.contextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.CounterSettings
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroCounter
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroCounterState
@@ -25,10 +26,10 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "PomodoroViewModelTAG"
 
-class PomodoroViewModel(context: Context) : ViewModel(),
+class PomodoroViewModel : ViewModel(),
     PomodoroScreenSAManager {
 
-    companion object {
+    /*companion object {
         val factoryProvider: Context.() -> ViewModelProvider.Factory = {
             viewModelFactory {
                 initializer {
@@ -38,10 +39,8 @@ class PomodoroViewModel(context: Context) : ViewModel(),
                 }
             }
         }
-    }
-    private val settingsStore = PreferencesDataStore(
-        context = context
-    )
+    }*/
+    private val settingsStore = PreferencesDataStore(contextProvider)
     private var preferences: PomodoroPreferences
     init {
         runBlocking{

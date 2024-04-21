@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import online.muhammadali.pomodoro.features.pomodoro.data.preferences.PreferencesDataStore
+import online.muhammadali.pomodoro.features.pomodoro.di.contextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
 import online.muhammadali.pomodoro.features.pomodoro.domain.PreferencesStore
 
@@ -20,9 +22,9 @@ private val defaultPreferences = PomodoroPreferences(
 )
 
 class PreferencesVm(
-    private val preferencesStore: PreferencesStore
 ) : ViewModel(), PreferencesViewModel {
 
+    private val preferencesStore = PreferencesDataStore(contextProvider)
     override fun Context.getCurrentPreferences(): StateFlow<PomodoroPreferences> {
         val preferencesStateFlow = MutableStateFlow(defaultPreferences)
 
