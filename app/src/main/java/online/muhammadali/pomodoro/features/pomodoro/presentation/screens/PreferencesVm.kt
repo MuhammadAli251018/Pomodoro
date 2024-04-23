@@ -13,7 +13,7 @@ import online.muhammadali.pomodoro.features.pomodoro.di.contextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
 import online.muhammadali.pomodoro.features.pomodoro.domain.PreferencesStore
 
-private val defaultPreferences = PomodoroPreferences(
+val defaultPreferences = PomodoroPreferences(
     focusPeriod = 25,
     breakPeriod = 5,
     longBreakPeriod = 15,
@@ -21,8 +21,7 @@ private val defaultPreferences = PomodoroPreferences(
     groupsOfSessions = 2
 )
 
-class PreferencesVm(
-) : ViewModel(), PreferencesViewModel {
+class PreferencesVm : ViewModel(), PreferencesViewModel {
 
     private val preferencesStore = PreferencesDataStore(contextProvider)
     override fun Context.getCurrentPreferences(): StateFlow<PomodoroPreferences> {

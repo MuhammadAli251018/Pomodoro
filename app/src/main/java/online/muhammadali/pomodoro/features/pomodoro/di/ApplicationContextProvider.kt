@@ -7,5 +7,7 @@ object ApplicationContextProvider {
     lateinit var applicationContext: Context
         private set
 
-    fun Application.updateContext(): Context = applicationContext
+    fun Application.updateContext() {
+        this@ApplicationContextProvider.applicationContext = this.applicationContext
+    }
 }

@@ -26,8 +26,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "PomodoroViewModelTAG"
 
-class PomodoroViewModel : ViewModel(),
-    PomodoroScreenSAManager {
+class PomodoroViewModel : ViewModel(), PomodoroScreenSAManager {
 
     /*companion object {
         val factoryProvider: Context.() -> ViewModelProvider.Factory = {

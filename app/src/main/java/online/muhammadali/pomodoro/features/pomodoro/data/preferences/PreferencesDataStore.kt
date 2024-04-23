@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.first
 import online.muhammadali.pomodoro.features.pomodoro.di.ContextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
 import online.muhammadali.pomodoro.features.pomodoro.domain.PreferencesStore
+import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.defaultPreferences
 import kotlin.Exception
 
 val Context.pomodoroPreferences by preferencesDataStore("pomodoro-preferences")
@@ -36,14 +37,25 @@ class PreferencesDataStore(
         return try {
             val pref = pomodoroPreferences.data.first()
             Result.success(PomodoroPreferences(
-                sessionsForLongBreak = pref[SESSIONS_UNTIL_LONG_BREAK] ?: throw Exception("Todo"),
-                groupsOfSessions = pref[GROUPS_OF_SESSIONS] ?: throw Exception("Todo"),
-                focusPeriod = pref[FOCUS_PERIOD] ?: throw Exception("Todo"),
-                breakPeriod = pref[BREAK_PERIOD] ?: throw Exception("Todo"),
-                longBreakPeriod = pref[LONG_BREAK_PERIOD] ?: throw Exception("Todo")
+                sessionsForLongBreak = pref[SESSIONS_UNTIL_LONG_BREAK] ?: throw unwrittenPrefsException,
+                groupsOfSessions = pref[GROUPS_OF_SESSIONS] ?: throw unwrittenPrefsException,
+                focusPeriod = pref[FOCUS_PERIOD] ?: throw unwrittenPrefsException,
+                breakPeriod = pref[BREAK_PERIOD] ?: throw unwrittenPrefsException,
+                longBreakPeriod = pref[LONG_BREAK_PERIOD] ?: throw unwrittenPrefsException
             ))
-        } catch (e: Exception) {
+        }
+        catch (e: UnwrittenPrefsException) {
+            writeDefaultPref()
+            getPreferences()
+        }
+        catch(e: Exception)  {
+            // todo implement better
             Result.failure(e)
         }
     }
+    private class UnwrittenPrefsException(message: String) : Exception(message)
+
+    private val unwrittenPrefsException = UnwrittenPrefsException("prefernces is not found")
+    private suspend fun writeDefaultPref() = savePreferences(defaultPreferences)
+
 }
