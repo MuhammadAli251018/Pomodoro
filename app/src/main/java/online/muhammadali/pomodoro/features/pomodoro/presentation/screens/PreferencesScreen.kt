@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import online.muhammadali.pomodoro.R
 import online.muhammadali.pomodoro.common.presentation.components.VerticalSpace
@@ -31,53 +32,43 @@ fun PreferencesScreen (
     navHostController: NavController
 ) {
     val context = LocalContext.current
-    val preferences by viewModel.getCurrentPreferences()
+    val preferences by viewModel.getCurrentPreferences().collectAsStateWithLifecycle()
     PreferencesScreen(
         preferences = preferences,
         onFocusPeriodChange = {
-            viewModel.apply {
-                context.saveNewPreferences(
-                    preferences.copy(
-                        focusPeriod = it
-                    )
+            viewModel.saveNewPreferences(
+                preferences.copy(
+                    focusPeriod = it
                 )
-            }
+            )
         },
         onBreakPeriodChange = {
-            viewModel.apply {
-                context.saveNewPreferences(
-                    preferences.copy(
-                        breakPeriod = it
-                    )
+            viewModel.saveNewPreferences(
+                preferences.copy(
+                    breakPeriod = it
                 )
-            }
+            )
         },
         onLongBreakPeriodChange = {
-            viewModel.apply {
-                context.saveNewPreferences(
-                    preferences.copy(
-                        longBreakPeriod = it
-                    )
+            viewModel.saveNewPreferences(
+                preferences.copy(
+                    longBreakPeriod = it
                 )
-            }
+            )
         },
         onSessionToLongBreakChange = {
-            viewModel.apply {
-                context.saveNewPreferences(
-                    preferences.copy(
-                        sessionsForLongBreak = it
-                    )
+            viewModel.saveNewPreferences(
+                preferences.copy(
+                    sessionsForLongBreak = it
                 )
-            }
+            )
         },
         onSessionsGroupsChange = {
-            viewModel.apply {
-                context.saveNewPreferences(
+            viewModel.saveNewPreferences(
                     preferences.copy(
                         groupsOfSessions = it
                     )
                 )
-            }
         },
         onToPomodoroCounter = {
             navHostController.navigate(Screen.Pomodoro.route)

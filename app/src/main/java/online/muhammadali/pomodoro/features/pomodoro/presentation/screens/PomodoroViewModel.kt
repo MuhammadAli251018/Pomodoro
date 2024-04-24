@@ -28,17 +28,6 @@ private const val TAG = "PomodoroViewModelTAG"
 
 class PomodoroViewModel : ViewModel(), PomodoroScreenSAManager {
 
-    /*companion object {
-        val factoryProvider: Context.() -> ViewModelProvider.Factory = {
-            viewModelFactory {
-                initializer {
-                    PomodoroViewModel(
-                        context = applicationContext
-                    )
-                }
-            }
-        }
-    }*/
     private val settingsStore = PreferencesDataStore(contextProvider)
     private var preferences: PomodoroPreferences
     init {

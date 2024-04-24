@@ -3,6 +3,7 @@ package online.muhammadali.pomodoro.features.pomodoro.presentation.screens
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,10 +25,10 @@ val defaultPreferences = PomodoroPreferences(
 class PreferencesVm : ViewModel(), PreferencesViewModel {
 
     private val preferencesStore = PreferencesDataStore(contextProvider)
-    override fun Context.getCurrentPreferences(): StateFlow<PomodoroPreferences> {
+    override fun getCurrentPreferences(): StateFlow<PomodoroPreferences> {
         val preferencesStateFlow = MutableStateFlow(defaultPreferences)
 
-        viewModelScope.launch {
+        viewModelScope.launch(context = Dispatchers.IO) {
             preferencesStore.getPreferences().onSuccess {
                 preferencesStateFlow.emit(
                     it
@@ -38,7 +39,7 @@ class PreferencesVm : ViewModel(), PreferencesViewModel {
         return preferencesStateFlow
     }
 
-    override fun Context.saveNewPreferences(newPref: PomodoroPreferences): Flow<Result<Unit>> {
+    override fun saveNewPreferences(newPref: PomodoroPreferences): Flow<Result<Unit>> {
         return flow {
             emit(
                 try {
