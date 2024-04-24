@@ -55,7 +55,7 @@ class PomodoroCounter(
 
     override fun resetCounter() {
         workScope.launch {
-
+            // todo
         }
     }
 }

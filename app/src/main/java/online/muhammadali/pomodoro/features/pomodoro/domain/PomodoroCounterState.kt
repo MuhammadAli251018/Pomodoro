@@ -1,6 +1,5 @@
 package online.muhammadali.pomodoro.features.pomodoro.domain
 
-import android.util.Log
 import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.perform
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -45,7 +44,6 @@ sealed class PomodoroCounterState : CounterState {
                         )
                     }
                     is LongBreak -> {
-                        Log.d(TAG, "long break completed: ${previousState.completedSessions}, default parameter: ${previousState.maxSessions - 1}")
                         FocusState(
                             25.minutes,
                             this,
@@ -64,7 +62,7 @@ sealed class PomodoroCounterState : CounterState {
         fun getPomodoroState(preferences: PomodoroPreferences): PomodoroCounterState = FocusState(
             session = preferences.focusPeriod.minutes,
             transitionRule = DefaultTransitionRule(preferences),
-            maxSessions = 2,
+            maxSessions = preferences.sessionsForLongBreak,
             changeReason = StateChangeReason.PauseOrResume,
             completedSessions = -1
         )
@@ -78,7 +76,6 @@ sealed class PomodoroCounterState : CounterState {
         val getNext: PomodoroCounterState.() -> PomodoroCounterState
     }
 
-//    abstract val transitionRule: PomodoroCounterState.() -> PomodoroCounterState
     abstract val transitionRule: TransitionRule
     abstract val maxSessions: Int
     abstract val changeReason: StateChangeReason
@@ -95,7 +92,6 @@ sealed class PomodoroCounterState : CounterState {
 
     data class FocusState(
         override val session: Duration,
-//        override val transitionRule: PomodoroCounterState.() -> PomodoroCounterState,
         override val transitionRule: TransitionRule,
         override val onGoing: Boolean = false,
         override val maxSessions: Int,
@@ -107,7 +103,6 @@ sealed class PomodoroCounterState : CounterState {
 
     data class BreakState(
         override val session: Duration,
-//        override val transitionRule: PomodoroCounterState.() -> PomodoroCounterState,
         override val transitionRule: TransitionRule,
         override val onGoing: Boolean = false,
         override val maxSessions: Int,
@@ -120,7 +115,6 @@ sealed class PomodoroCounterState : CounterState {
     data class LongBreak(
         override val session: Duration,
         override val transitionRule: TransitionRule,
-//        override val transitionRule: PomodoroCounterState.() -> PomodoroCounterState,
         override val onGoing: Boolean = false,
         override val maxSessions: Int,
         override val changeReason: StateChangeReason,
