@@ -18,12 +18,14 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import kotlinx.coroutines.flow.StateFlow
 import online.muhammadali.pomodoro.common.presentation.components.VerticalSpace
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.PomodoroCounter
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.SessionsIndicator
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.SettingsButton
+import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.navigation.Screen
 
 private const val TAG  = "PomodoroScreenTAG"
 
@@ -99,7 +101,8 @@ interface PomodoroScreenSAManager {
 
 @Composable
 fun PomodoroScreen(
-    stateActionManager: PomodoroScreenSAManager
+    stateActionManager: PomodoroScreenSAManager,
+    navController: NavController
 ) {
     val screenMode by stateActionManager.screenMode.collectAsStateWithLifecycle()
     val counterState by stateActionManager.counterState.collectAsStateWithLifecycle()
@@ -109,6 +112,7 @@ fun PomodoroScreen(
         screenMode = screenMode,
         counterState = counterState,
         indicatorState = indicatorState,
+        navController = navController,
         onCounterClick = stateActionManager.onCounterClick
     )
 }
@@ -117,9 +121,11 @@ fun PomodoroScreen(
     screenMode: PomodoroScreenMode,
     counterState: UiPomodoroCounterState,
     indicatorState: IndicatorState,
+    navController: NavController,
     onCounterClick: () -> Unit
 ) {
-    Log.d(TAG, "counterState: ${counterState.currentTime}")
+    //Log.d(TAG, "counterState: ${counterState.currentTime}")
+
     PomodoroScreen(
         backgroundColor = screenMode.backgroundColor,
         time = counterState.currentTime,
@@ -129,7 +135,7 @@ fun PomodoroScreen(
         title = screenMode.title,
         onCounterClick = onCounterClick,
         onToPreferences = {
-            //Todo
+            navController.navigate(Screen.Preferences.route)
         }
     )
 }

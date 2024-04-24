@@ -20,12 +20,18 @@ fun PomodoroNavHost(
     ) {
         composable(Screen.Pomodoro.route){
             val viewModel = viewModel<PomodoroViewModel>()
-            PomodoroScreen(stateActionManager = viewModel)
+            PomodoroScreen(
+                stateActionManager = viewModel,
+                navController = navHostController
+            )
         }
 
         composable(Screen.Preferences.route){
             val viewModel = viewModel<PreferencesVm>()
-            PreferencesScreen(viewModel = viewModel)
+            PreferencesScreen(
+                viewModel = viewModel,
+                navHostController = navHostController
+            )
         }
     }
 }

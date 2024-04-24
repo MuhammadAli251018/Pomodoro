@@ -1,6 +1,7 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -15,16 +16,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import online.muhammadali.pomodoro.R
 import online.muhammadali.pomodoro.common.presentation.components.VerticalSpace
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.NumberCounter
+import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.navigation.Screen
 
 
 @Composable
 fun PreferencesScreen (
-    viewModel: PreferencesViewModel
+    viewModel: PreferencesViewModel,
+    navHostController: NavController
 ) {
     val context = LocalContext.current
     val preferences by viewModel.getCurrentPreferences()
@@ -74,6 +78,9 @@ fun PreferencesScreen (
                     )
                 )
             }
+        },
+        onToPomodoroCounter = {
+            navHostController.navigate(Screen.Pomodoro.route)
         }
     )
 }
@@ -86,7 +93,8 @@ fun PreferencesScreen (
     onBreakPeriodChange: (Int) -> Unit,
     onLongBreakPeriodChange: (Int) -> Unit,
     onSessionToLongBreakChange: (Int) -> Unit,
-    onSessionsGroupsChange: (Int) -> Unit
+    onSessionsGroupsChange: (Int) -> Unit,
+    onToPomodoroCounter: () -> Unit
 ) {
     Column (
         modifier = Modifier
@@ -96,7 +104,9 @@ fun PreferencesScreen (
         VerticalSpace(height = 20.dp)
 
         Icon(
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier
+                .size(40.dp)
+                .clickable(onClick = onToPomodoroCounter),
             painter = painterResource(id = R.drawable.left_arrow_ic),
             contentDescription = "Back to pomodoro",
             tint = Color.White
@@ -202,7 +212,8 @@ fun PreferencesScreenPreview() {
             onFocusPeriodChange = {},
             onBreakPeriodChange = {},
             onLongBreakPeriodChange = {},
-            onSessionToLongBreakChange = {}
+            onSessionToLongBreakChange = {},
+            {}
         ) {
 
         }
