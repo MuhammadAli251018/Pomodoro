@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,14 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import kotlinx.coroutines.flow.StateFlow
 import online.muhammadali.pomodoro.common.presentation.components.VerticalSpace
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.PomodoroCounter
 import online.muhammadali.pomodoro.features.pomodoro.presentation.components.SessionsIndicator
+import online.muhammadali.pomodoro.features.pomodoro.presentation.components.SettingsButton
+import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.navigation.Screen
 
 private const val TAG  = "PomodoroScreenTAG"
 
@@ -96,7 +101,8 @@ interface PomodoroScreenSAManager {
 
 @Composable
 fun PomodoroScreen(
-    stateActionManager: PomodoroScreenSAManager
+    stateActionManager: PomodoroScreenSAManager,
+    navController: NavController
 ) {
     val screenMode by stateActionManager.screenMode.collectAsStateWithLifecycle()
     val counterState by stateActionManager.counterState.collectAsStateWithLifecycle()
@@ -106,6 +112,7 @@ fun PomodoroScreen(
         screenMode = screenMode,
         counterState = counterState,
         indicatorState = indicatorState,
+        navController = navController,
         onCounterClick = stateActionManager.onCounterClick
     )
 }
@@ -114,9 +121,11 @@ fun PomodoroScreen(
     screenMode: PomodoroScreenMode,
     counterState: UiPomodoroCounterState,
     indicatorState: IndicatorState,
+    navController: NavController,
     onCounterClick: () -> Unit
 ) {
-    Log.d(TAG, "counterState: ${counterState.currentTime}")
+    //Log.d(TAG, "counterState: ${counterState.currentTime}")
+
     PomodoroScreen(
         backgroundColor = screenMode.backgroundColor,
         time = counterState.currentTime,
@@ -124,7 +133,10 @@ fun PomodoroScreen(
         sessionsCount = indicatorState.sessionsCount,
         lastCompletedSession = indicatorState.lastCompletedSession,
         title = screenMode.title,
-        onCounterClick = onCounterClick
+        onCounterClick = onCounterClick,
+        onToPreferences = {
+            navController.navigate(Screen.Preferences.route)
+        }
     )
 }
 
@@ -137,6 +149,7 @@ private fun PomodoroScreen(
     sessionsCount: Int,
     lastCompletedSession: Int,
     title: String,
+    onToPreferences: () -> Unit,
     onCounterClick: () -> Unit
 ) {
     Column(
@@ -145,6 +158,17 @@ private fun PomodoroScreen(
             .background(color = backgroundColor),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        VerticalSpace(height = 30.dp)
+
+        //  to settings
+        SettingsButton(
+            modifier = Modifier
+                .padding(horizontal = 25.dp)
+                .align(Alignment.End),
+            iconSize = DpSize(width = 35.dp, height = 35.dp),
+            onClick = onToPreferences
+        )
 
         VerticalSpace(height = 30.dp)
 
@@ -188,7 +212,8 @@ fun PomodoroScreenPreview() {
             counterCompletion = 0.75f,
             sessionsCount = 4,
             lastCompletedSession = 1,
-            title = "Focus Time"
+            title = "Focus Time",
+            onToPreferences = {}
         ) {
 
         }

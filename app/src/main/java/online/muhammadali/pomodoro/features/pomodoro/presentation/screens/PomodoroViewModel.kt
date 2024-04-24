@@ -1,29 +1,44 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.screens
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import online.muhammadali.pomodoro.features.pomodoro.data.preferences.PreferencesDataStore
+import online.muhammadali.pomodoro.features.pomodoro.di.contextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.CounterSettings
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroCounter
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroCounterState
+import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 private const val TAG = "PomodoroViewModelTAG"
 
-class PomodoroViewModel : ViewModel(),
-    PomodoroScreenSAManager {
+class PomodoroViewModel : ViewModel(), PomodoroScreenSAManager {
 
+    private val settingsStore = PreferencesDataStore(contextProvider)
+    private var preferences: PomodoroPreferences
+    init {
+        runBlocking{
+            preferences = settingsStore.getPreferences().getOrThrow()
+
+        }
+    }
     private val counter = PomodoroCounter(
         counterSettings = CounterSettings(durationPerUpdate = 50.milliseconds),
-        initialState = PomodoroCounterState.getDefaultState()
+        initialState = PomodoroCounterState.getPomodoroState(preferences)
     )
 
     private val _screenMode: MutableStateFlow<PomodoroScreenMode> = MutableStateFlow(PomodoroScreenMode.FocusMode)
