@@ -31,7 +31,6 @@ fun PreferencesScreen (
     viewModel: PreferencesViewModel,
     navHostController: NavController
 ) {
-    val context = LocalContext.current
     val preferences by viewModel.getCurrentPreferences().collectAsStateWithLifecycle()
     PreferencesScreen(
         preferences = preferences,

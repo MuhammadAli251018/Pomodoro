@@ -1,5 +1,6 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,12 +64,18 @@ fun NumberCounter(
         titleFontSize = titleFontSize,
         smallTextSize = numberFontSize / 2,
         onIncrement = {
-            if ((currentCount + step) <= max) currentCount += step
-            onChange(currentCount)
+            if ((currentCount + step) <= max)
+            {
+                currentCount += step
+                onChange(currentCount)
+            }
         },
         onDecrement = {
-            if ((currentCount - step) >= min) currentCount -= step
-            onChange(currentCount)
+            if ((currentCount - step) >= min) {
+                currentCount -= step
+                Log.d("Bla Tag", "current Count $currentCount")
+                onChange(currentCount)
+            }
         }
     )
 }

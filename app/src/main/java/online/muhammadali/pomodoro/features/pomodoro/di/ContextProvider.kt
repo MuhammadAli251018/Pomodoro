@@ -4,6 +4,6 @@ import android.content.Context
 
 val contextProvider by lazy { ContextProvider() }
 
-class ContextProvider internal constructor(){
-    inline fun <T> runWithContext(block: Context.() -> T): T = block(ApplicationContextProvider.applicationContext)
+class ContextProvider internal constructor(val context: Context = ApplicationContextProvider.applicationContext){
+    inline fun <T> runWithContext(block: Context.() -> T): T = block(context)
 }

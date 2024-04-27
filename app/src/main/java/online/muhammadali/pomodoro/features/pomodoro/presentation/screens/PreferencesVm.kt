@@ -1,14 +1,17 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import online.muhammadali.pomodoro.common.util.extractData
 import online.muhammadali.pomodoro.features.pomodoro.data.preferences.PreferencesDataStore
 import online.muhammadali.pomodoro.features.pomodoro.di.contextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.PomodoroPreferences
@@ -22,34 +25,35 @@ val defaultPreferences = PomodoroPreferences(
     groupsOfSessions = 2
 )
 
+private const val TAG = "PreferencesVmTag"
 class PreferencesVm : ViewModel(), PreferencesViewModel {
 
     private val preferencesStore = PreferencesDataStore(contextProvider)
     override fun getCurrentPreferences(): StateFlow<PomodoroPreferences> {
-        val preferencesStateFlow = MutableStateFlow(defaultPreferences)
 
-        viewModelScope.launch(context = Dispatchers.IO) {
-            preferencesStore.getPreferences().onSuccess {
-                preferencesStateFlow.emit(
-                    it
-                )
+        val prefFlow = MutableStateFlow(defaultPreferences)
+        viewModelScope.launch{
+            prefFlow.apply {
+                preferencesStore.getPreferences().extractData(flowCollector = this) {
+                    // todo handle
+                    Log.d(TAG, "error while reading preferences: ${cause}, ${message}")
+                }
             }
         }
 
-        return preferencesStateFlow
+        return prefFlow.asStateFlow()
     }
 
-    override fun saveNewPreferences(newPref: PomodoroPreferences): Flow<Result<Unit>> {
-        return flow {
-            emit(
-                try {
-                    Result.success(preferencesStore.savePreferences(newPref))
-                }
-                catch (e: Exception) {
-                    Result.failure(e)
-                }
-            )
-        }
+    override fun saveNewPreferences(newPref: PomodoroPreferences) {
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesStore.savePreferences(newPref)
+            /*try {
+                Log.d(TAG, "saving new prefs")
+                Result.success()
 
+            } catch (e: Exception) {
+                Result.failure(e)
+            }*/
+        }
     }
 }

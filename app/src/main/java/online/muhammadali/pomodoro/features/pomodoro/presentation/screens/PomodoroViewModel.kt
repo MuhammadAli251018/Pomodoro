@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import online.muhammadali.pomodoro.common.util.getOrThrow
 import online.muhammadali.pomodoro.features.pomodoro.data.preferences.PreferencesDataStore
 import online.muhammadali.pomodoro.features.pomodoro.di.contextProvider
 import online.muhammadali.pomodoro.features.pomodoro.domain.CounterSettings
@@ -29,10 +30,12 @@ private const val TAG = "PomodoroViewModelTAG"
 class PomodoroViewModel : ViewModel(), PomodoroScreenSAManager {
 
     private val settingsStore = PreferencesDataStore(contextProvider)
-    private var preferences: PomodoroPreferences
+    private var preferences: PomodoroPreferences = defaultPreferences
     init {
-        runBlocking{
-            preferences = settingsStore.getPreferences().getOrThrow()
+        viewModelScope.launch(Dispatchers.IO){
+            settingsStore.getPreferences().collectLatest {
+                preferences = it.getOrThrow()
+            }
 
         }
     }
