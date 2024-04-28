@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +47,7 @@ fun NumberCounter(
     onChange: (Int) -> Unit
 ) {
     var showControllers by remember { mutableStateOf(false) }
-    var currentCount by remember { mutableStateOf(current) }
+    var currentCount by remember { mutableIntStateOf(current) }
 
     LaunchedEffect(current) {
         currentCount = current
@@ -63,12 +64,17 @@ fun NumberCounter(
         titleFontSize = titleFontSize,
         smallTextSize = numberFontSize / 2,
         onIncrement = {
-            if ((currentCount + step) <= max) currentCount += step
-            onChange(currentCount)
+            if ((currentCount + step) <= max)
+            {
+                currentCount += step
+                onChange(currentCount)
+            }
         },
         onDecrement = {
-            if ((currentCount - step) >= min) currentCount -= step
-            onChange(currentCount)
+            if ((currentCount - step) >= min) {
+                currentCount -= step
+                onChange(currentCount)
+            }
         }
     )
 }

@@ -27,32 +27,6 @@ import androidx.compose.ui.unit.sp
 import online.muhammadali.pomodoro.common.ui.theme.PomodoroTheme
 
 
-/*
-@Composable
-fun PomodoroCounter(
-    modifier: Modifier,
-    size: DpSize,
-    time: String,
-    completion: Float,
-    fontSize: TextUnit,
-    backgroundColor: Color
-) {
-    Box(
-        modifier = modifier
-            .background(backgroundColor),
-        contentAlignment = Alignment.Center
-    ){
-        PomodoroCounter(
-            modifier = Modifier,
-            size = size,
-            time = time,
-            completion = completion,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Light
-        )
-    }
-}*/
-
 // stateless
 @Composable
 fun PomodoroCounter(
