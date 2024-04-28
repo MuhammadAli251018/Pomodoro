@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -155,8 +154,8 @@ fun PreferencesScreen (
         //  sessions for long break
         NumberCounter(
             modifier = Modifier,
-            min = 10,
-            max = 45,
+            min = 1,
+            max = 8,
             current = preferences.sessionsForLongBreak,
             step = 1,
             title = "Sessions until long break",
@@ -171,8 +170,8 @@ fun PreferencesScreen (
         //  sessions groups period
         NumberCounter(
             modifier = Modifier,
-            min = 10,
-            max = 45,
+            min = 1,
+            max = 4,
             current = preferences.groupsOfSessions,
             step = 1,
             title = "Sessions Groups",

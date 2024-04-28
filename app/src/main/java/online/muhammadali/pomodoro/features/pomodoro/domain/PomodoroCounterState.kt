@@ -4,53 +4,24 @@ import online.muhammadali.pomodoro.features.pomodoro.presentation.screens.perfor
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
-private const val TAG = "PomodoroCounterStateTAG"
+//private const val TAG = "PomodoroCounterStateTAG"
 sealed class PomodoroCounterState : CounterState {
 
     companion object {
+
         class DefaultTransitionRule(
             private val preferences: PomodoroPreferences
         ) : TransitionRule {
             private fun defaultTransitionRule(
                 previousState: PomodoroCounterState
             ): PomodoroCounterState {
-                val changeReason = StateChangeReason.DurationChange
-
                 return when(previousState) {
-                    is BreakState -> FocusState(
-                        preferences.focusPeriod.minutes,
-                        this,
-                        maxSessions = previousState.maxSessions,
-                        changeReason = changeReason,
-                        completedSessions = previousState.completedSessions
-                    )
-                    is FocusState -> if (previousState.completedSessions + 1 < previousState.maxSessions - 1) {
-                        BreakState(
-                            5.minutes,
-                            this,
-                            maxSessions = previousState.maxSessions,
-                            changeReason = changeReason,
-                            completedSessions = previousState.completedSessions + 1
-                        )
-                    }
-                    else {
-
-                        LongBreak(
-                            15.minutes,
-                            transitionRule = this,
-                            maxSessions = previousState.maxSessions,
-                            changeReason = changeReason,
-                            completedSessions = previousState.completedSessions + 1
-                        )
-                    }
-                    is LongBreak -> {
-                        FocusState(
-                            25.minutes,
-                            this,
-                            maxSessions = previousState.maxSessions,
-                            changeReason = changeReason
-                        )
-                    }
+                    is BreakState -> preferences.focusState(previousState = previousState)
+                    is FocusState -> if (previousState.completedSessions + 1 < previousState.maxSessions - 1)
+                        preferences.breakState(previousState = previousState)
+                    else
+                        preferences.longBreakState(previousState = previousState)
+                    is LongBreak -> preferences.focusState(previousState = previousState)
                 }
             }
             override val getNext: PomodoroCounterState.() -> PomodoroCounterState = {
@@ -74,6 +45,47 @@ sealed class PomodoroCounterState : CounterState {
 
     interface TransitionRule {
         val getNext: PomodoroCounterState.() -> PomodoroCounterState
+        fun PomodoroPreferences.focusState(
+            previousState: PomodoroCounterState,
+            changeReason: StateChangeReason = StateChangeReason.DurationChange,
+            onGoing: Boolean = false,
+            completedSessions: Int = previousState.completedSessions
+        ): FocusState = FocusState(
+            session = focusPeriod.minutes,
+            transitionRule = this@TransitionRule,
+            onGoing = onGoing,
+            maxSessions = previousState.maxSessions,
+            changeReason,
+            completedSessions = completedSessions
+        )
+
+        fun PomodoroPreferences.breakState(
+            previousState: PomodoroCounterState,
+            changeReason: StateChangeReason = StateChangeReason.DurationChange,
+            onGoing: Boolean = false,
+            completedSessions: Int = previousState.completedSessions + 1
+        ): BreakState = BreakState(
+            session = breakPeriod.minutes,
+            transitionRule = this@TransitionRule,
+            onGoing = onGoing,
+            maxSessions = previousState.maxSessions,
+            changeReason,
+            completedSessions = completedSessions
+        )
+
+        fun PomodoroPreferences.longBreakState(
+            previousState: PomodoroCounterState,
+            changeReason: StateChangeReason = StateChangeReason.DurationChange,
+            onGoing: Boolean = false,
+            completedSessions: Int = previousState.completedSessions + 1
+        ): BreakState = BreakState(
+            session = breakPeriod.minutes,
+            transitionRule = this@TransitionRule,
+            onGoing = onGoing,
+            maxSessions = previousState.maxSessions,
+            changeReason,
+            completedSessions = completedSessions
+        )
     }
 
     abstract val transitionRule: TransitionRule

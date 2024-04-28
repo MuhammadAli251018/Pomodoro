@@ -1,6 +1,5 @@
 package online.muhammadali.pomodoro.features.pomodoro.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,7 +47,7 @@ fun NumberCounter(
     onChange: (Int) -> Unit
 ) {
     var showControllers by remember { mutableStateOf(false) }
-    var currentCount by remember { mutableStateOf(current) }
+    var currentCount by remember { mutableIntStateOf(current) }
 
     LaunchedEffect(current) {
         currentCount = current
@@ -73,7 +73,6 @@ fun NumberCounter(
         onDecrement = {
             if ((currentCount - step) >= min) {
                 currentCount -= step
-                Log.d("Bla Tag", "current Count $currentCount")
                 onChange(currentCount)
             }
         }
